@@ -10,7 +10,7 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBContext;
 
-import nl.proteon.liferay.surfnet.security.opensocial.model.RemoteGroup;
+import nl.proteon.liferay.surfnet.security.opensocial.model.OpenSocialGroup;
 
 import com.sun.jersey.api.json.JSONJAXBContext;
 
@@ -23,7 +23,7 @@ public final class JAXBContextResolver implements ContextResolver<JAXBContext> {
 
     private final Set<Class> types;
 
-    private final Class[] cTypes = {RemoteGroup.class};
+    private final Class[] cTypes = {OpenSocialGroup.class};
 
     public JAXBContextResolver() throws Exception {
         Map<String, Object> props = new HashMap<String, Object>();
