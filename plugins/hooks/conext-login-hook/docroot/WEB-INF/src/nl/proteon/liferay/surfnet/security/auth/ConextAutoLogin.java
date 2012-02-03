@@ -105,13 +105,13 @@ public class ConextAutoLogin implements AutoLogin {
 			for(OpenSocialGroup openSocialGroup : openSocialGroups) {
 				Group group = null;
 				group = getGroup(companyId,openSocialGroup.getTitle());
-				if(!(group==null)) {
-				} else {
+				if(group==null) {
 					group = addGroup(
 							user.getUserId(),
 							companyId, 
 							openSocialGroup.getTitle(),
-							openSocialGroup.getDescription()
+							openSocialGroup.getDescription(),
+							"/" + openSocialGroup.getId()
 							);
 				}
 			}
@@ -191,14 +191,13 @@ public class ConextAutoLogin implements AutoLogin {
 		return group;
 	}
 	
-	public Group addGroup(long userId, long companyId, String name, String description) {
+	public Group addGroup(long userId, long companyId, String name, String description, String friendlyURL) {
 		Group group = null;
 		
 		try {
 			String className = Group.class.getName();
 			long classPK = CounterLocalServiceUtil.increment(className);
 			int type = 3;
-			String friendlyURL = "/" + name;
 			boolean site = true;
 			boolean active = true;
 		
