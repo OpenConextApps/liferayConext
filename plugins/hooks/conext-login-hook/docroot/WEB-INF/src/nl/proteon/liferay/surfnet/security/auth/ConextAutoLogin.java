@@ -271,7 +271,11 @@ public class ConextAutoLogin implements AutoLogin {
 	}
 	
 	private static void addPrivatePage(long userId, long groupId) throws Exception {
+		
+		User user = UserLocalServiceUtil.getUser(userId);
+		
 		ServiceContext serviceContext = new ServiceContext();
+		serviceContext.setUuid(user.getUserUuid());
 		
 		Layout layout = LayoutLocalServiceUtil.addLayout(userId, groupId, true,
 				0, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, 
