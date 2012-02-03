@@ -19,11 +19,14 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.portlet.PortletProps;
@@ -104,7 +107,7 @@ public class ConextAutoLogin implements AutoLogin {
 
 			for(OpenSocialGroup openSocialGroup : openSocialGroups) {
 				Group group = null;
-				group = getGroup(companyId,openSocialGroup.getTitle());
+				group = getGroup(companyId, openSocialGroup.getTitle());
 				if(group==null) {
 					group = addGroup(
 							user.getUserId(),
@@ -114,6 +117,12 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 				}
+				Role role = RoleLocalServiceUtil.getRole(companyId, "Community Member");
+				
+				UserGroupRoleLocalServiceUtil.addUserGroupRoles(
+						user.getUserId(), 
+						group.getGroupId(), 
+						new long[] { role.getRoleId() });
 			}
 			
 			credentials = new String[3];
