@@ -127,11 +127,11 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 					
-					LayoutSetLocalServiceUtil.addLayoutSet(group.getClassPK(), true);
+					LayoutSetLocalServiceUtil.addLayoutSet(group.getGroupId(), true);
 					
-					LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
-							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
-							"", new ServiceContext());
+					//LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
+					//		-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
+					//		"", new ServiceContext());
 					
 				} else {
 					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
