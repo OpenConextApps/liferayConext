@@ -29,11 +29,11 @@ public class OpenSocialGroupLocalServiceUtil {
 		cc.getClasses().add(JAXBContextResolver.class);
 	}
 
-   public static List<RemoteGroup> getOpenSocialGroups(long lUserID) throws OpenSocialException{
+   public static List<OpenSocialGroup> getOpenSocialGroups(long lUserID) throws OpenSocialException{
 	   _log.debug("[" + lUserID + "] Starting oAuth...");
       ServiceProfile sp = getParams();
       
-      List<RemoteGroup> listResult = new ArrayList<RemoteGroup>();
+      List<OpenSocialGroup> listResult = new ArrayList<OpenSocialGroup>();
 
       
       try{
@@ -80,7 +80,7 @@ public class OpenSocialGroupLocalServiceUtil {
 
             		_log.debug("[" + lUserID + "]" + " groupID=" + sGroupID + " groupTitle=" + sGroupTitle);
 
-            		listResult.add(new RemoteGroup(sGroupID, sGroupTitle, ""));
+            		listResult.add(new OpenSocialGroup(sGroupID, sGroupTitle, ""));
             	}
             }
             catch (RequestException e) { 
