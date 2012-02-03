@@ -44,20 +44,20 @@ public class ConextAutoLogin implements AutoLogin {
 			
 			User user = null;
 			
-			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.email")))) {
+			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.email")).equals(""))) {
 				emailAddress = request.getHeader(PortletProps.get("saml2.header.mapping.email"));
 			}
-			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.screenname")))) {
+			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.screenname")).equals(""))) {
 				screenName = request.getHeader(PortletProps.get("saml2.header.mapping.screenname"));
 				screenName = StringUtil.replace(
 						screenName,
 						new String[] {StringPool.SLASH, StringPool.UNDERLINE, StringPool.SPACE},
 						new String[] {StringPool.PERIOD, StringPool.PERIOD, StringPool.PERIOD});
 			}
-			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.id")))) {
+			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.id")).equals(""))) {
 				openId = request.getHeader(PortletProps.get("saml2.header.mapping.id"));
 			}
-			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.fullname"))) 
+			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.fullname")).equals("")) 
 					&& PortletProps.get("saml2.header.mapping.firstname").equals("")
 					&& PortletProps.get("saml2.header.mapping.middlename").equals("")
 					&& PortletProps.get("saml2.header.mapping.lastname").equals("")) {
