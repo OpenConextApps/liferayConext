@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -19,7 +18,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
-import com.liferay.portal.security.ldap.PortalLDAPImporterUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.portlet.PortletProps;
@@ -34,7 +32,6 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		try {
 			long companyId = PortalUtil.getCompanyId(request);
-			
 			
 			String emailAddress = StringPool.BLANK;
 			String firstName = StringPool.BLANK;
@@ -88,11 +85,11 @@ public class ConextAutoLogin implements AutoLogin {
 				user.setMiddleName(middleName);
 				user.setLastName(lastName);
 				user.setScreenName(screenName);
-				user.setOpenId(uniqueId);
 				
 				UserLocalServiceUtil.updateUser(user);
 				
 			} catch (Exception e) {
+				_log.info("creating user");
 				user = UserLocalServiceUtil
 						.createUser(CounterLocalServiceUtil.increment(User.class.getName()));
 				
@@ -104,12 +101,13 @@ public class ConextAutoLogin implements AutoLogin {
 				user.setLastName(lastName);
 				user.setScreenName(screenName);
 				user.setOpenId(uniqueId);
-				
-				UserLocalServiceUtil.addUser(user);
+				try {
+					UserLocalServiceUtil.addUser(user);
+				} catch (SystemException se) {
+					_log.error(se,se);
+				}
 			} 
-			
 
-			
 			credentials = new String[3];
 
 			credentials[0] = String.valueOf(user.getUserId());
