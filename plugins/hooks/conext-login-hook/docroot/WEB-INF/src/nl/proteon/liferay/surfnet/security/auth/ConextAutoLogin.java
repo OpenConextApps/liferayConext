@@ -127,7 +127,14 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 					
-					LayoutSetLocalServiceUtil.addLayoutSet(group.getGroupId(), true);
+					
+					LayoutSet layoutSet = LayoutSetLocalServiceUtil.createLayoutSet(
+							CounterLocalServiceUtil.increment(LayoutSet.class.getName()));
+					
+					layoutSet.setGroupId(group.getGroupId());
+					layoutSet.setPrivateLayout(true);
+					
+					LayoutSetLocalServiceUtil.addLayoutSet(layoutSet);
 					
 					//LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
 					//		-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
