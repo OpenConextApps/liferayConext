@@ -1,12 +1,15 @@
 package nl.proteon.liferay.surfnet.security.auth;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import nl.proteon.liferay.surfnet.security.opensocial.OpenSocialGroupLocalServiceUtil;
+import nl.proteon.liferay.surfnet.security.opensocial.model.OpenSocialGroup;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -15,10 +18,11 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -91,12 +95,27 @@ public class ConextAutoLogin implements AutoLogin {
 				user.setScreenName(screenName);
 				
 				UserLocalServiceUtil.updateUser(user);
+				
 			} else {
 				user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
 			}
 			
-			OpenSocialGroupLocalServiceUtil.getOpenSocialGroups(user.getUserId());
+			List<OpenSocialGroup> openSocialGroups = OpenSocialGroupLocalServiceUtil.getOpenSocialGroups(user.getUserId());
 
+			for(OpenSocialGroup openSocialGroup : openSocialGroups) {
+				Group group = null;
+				group = getGroup(companyId,openSocialGroup.getTitle());
+				if(!(group==null)) {
+				} else {
+					group = addGroup(
+							user.getUserId(),
+							companyId, 
+							openSocialGroup.getTitle(),
+							openSocialGroup.getDescription()
+							);
+				}
+			}
+			
 			credentials = new String[3];
 
 			credentials[0] = String.valueOf(user.getUserId());
@@ -112,6 +131,7 @@ public class ConextAutoLogin implements AutoLogin {
 
 	public User getUserByOpenId(long companyId, String openId) {
 		User user = null;
+		
 		try {
 			user = UserLocalServiceUtil.getUserByOpenId(companyId, openId);
 		} catch (PortalException e) {
@@ -162,6 +182,42 @@ public class ConextAutoLogin implements AutoLogin {
 		}
 		
 		return user;
+	}
+	
+	public Group getGroup(long companyId, String name) {
+		Group group = null;
+		
+		try {
+			GroupLocalServiceUtil.getGroup(companyId, name);
+		} catch (PortalException e) {
+			_log.error(e,e);
+		} catch (SystemException e) {
+			_log.error(e,e);
+		}
+		return group;
+	}
+	
+	public Group addGroup(long userId, long companyId, String name, String description) {
+		Group group = null;
+		
+		try {
+			String className = Group.class.getName();
+			long classPK = CounterLocalServiceUtil.increment(className);
+			int type = 3;
+			String friendlyURL = "/" + name;
+			boolean site = true;
+			boolean active = true;
+		
+			ServiceContext serviceContext = new ServiceContext();		
+
+			GroupLocalServiceUtil.addGroup(userId, className, classPK, name, 
+					description, type, friendlyURL, site, active, serviceContext);
+		} catch (PortalException e) {
+			_log.error(e,e);
+		} catch (SystemException e) {
+			_log.error(e,e);
+		}
+		return group;
 	}
 	
 	private static Log _log = LogFactoryUtil.getLog(ConextAutoLogin.class);
