@@ -13,9 +13,6 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-
 import nl.proteon.liferay.surfnet.security.opensocial.config.*;
 import nl.proteon.liferay.surfnet.security.opensocial.exceptions.*;
 import nl.proteon.liferay.surfnet.security.opensocial.model.*;
@@ -24,16 +21,8 @@ public class OpenSocialGroupLocalServiceUtil {
 	
 	private static Log _log = LogFactoryUtil.getLog(OpenSocialGroupLocalServiceUtil.class);
 
-	private static ClientConfig cc;
-
-	static{
-		cc = new DefaultClientConfig();
-		
-		// use the following jaxb context resolver
-		cc.getClasses().add(JAXBContextResolver.class);
-	}
-
 	public static List<OpenSocialGroup> getOpenSocialGroups(long lUserID) throws OpenSocialException{
+		
 		_log.debug("[" + lUserID + "] Starting oAuth...");
 		ServiceProfile sp = getParams();
       
