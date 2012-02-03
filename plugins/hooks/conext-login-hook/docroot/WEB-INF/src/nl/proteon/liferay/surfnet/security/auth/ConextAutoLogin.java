@@ -45,10 +45,10 @@ public class ConextAutoLogin implements AutoLogin {
 			
 			User user = null;
 
-			List<String> headers = Collections.list((Enumeration<String>)request.getHeaderNames());
-			for(String headerName : headers) {
-				_log.info(headerName + ": " + request.getHeader(headerName));
-			}
+			//List<String> headers = Collections.list((Enumeration<String>)request.getHeaderNames());
+			//for(String headerName : headers) {
+			//	_log.info(headerName + ": " + request.getHeader(headerName));
+			//}
 			
 			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.email")))) {
 				emailAddress = request.getHeader(PortletProps.get("saml2.header.mapping.email"));
@@ -80,27 +80,19 @@ public class ConextAutoLogin implements AutoLogin {
 			
 			user = getUserByOpenId(companyId, openId);
 			
-			_log.info("first: "+firstName);
-			_log.info("middle: "+middleName);
-			_log.info("last: "+lastName);
-			_log.info("screen: "+screenName);
-			_log.info("email: "+emailAddress);
-			_log.info("unique: "+openId);
-			_log.info("companyId: "+companyId);
-			
-			//if(!(user==null)) {
-			//	user.setCompanyId(companyId);
-			//	user.setCreateDate(DateUtil.newDate());
-			//	user.setEmailAddress(emailAddress);
-			//	user.setFirstName(firstName);
-			//	user.setMiddleName(middleName);
-			//	user.setLastName(lastName);
-			//	user.setScreenName(screenName);
+			if(!(user==null)) {
+				user.setCompanyId(companyId);
+				user.setCreateDate(DateUtil.newDate());
+				user.setEmailAddress(emailAddress);
+				user.setFirstName(firstName);
+				user.setMiddleName(middleName);
+				user.setLastName(lastName);
+				user.setScreenName(screenName);
 				
-			//	UserLocalServiceUtil.updateUser(user);
-			//} else {
+				UserLocalServiceUtil.updateUser(user);
+			} else {
 				user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
-			//}
+			}
 
 			credentials = new String[3];
 
