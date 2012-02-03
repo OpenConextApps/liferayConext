@@ -118,6 +118,7 @@ public class ConextAutoLogin implements AutoLogin {
 				group = getGroup(companyId, openSocialGroup.getTitle());
 				
 				if(group==null) {
+					
 					group = addGroup(
 							user.getUserId(),
 							companyId, 
@@ -134,7 +135,14 @@ public class ConextAutoLogin implements AutoLogin {
 		            layoutSet.setPrivateLayout(true);
 		            
 		            LayoutSetLocalServiceUtil.addLayoutSet(layoutSet);
+		            
+		            layoutSet.setPrivateLayout(false);
+		            
+		            layoutSet = LayoutSetLocalServiceUtil
+		            		.createLayoutSet(CounterLocalServiceUtil.increment(LayoutSet.class.getName()));
 					
+		            LayoutSetLocalServiceUtil.addLayoutSet(layoutSet);
+		            
 		            addPrivatePage(user.getUserId(), group.getGroupId());
 		            
 				} else {
