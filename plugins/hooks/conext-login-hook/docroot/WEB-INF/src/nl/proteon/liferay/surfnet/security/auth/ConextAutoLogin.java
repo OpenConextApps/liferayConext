@@ -7,6 +7,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -55,13 +57,17 @@ public class ConextAutoLogin implements AutoLogin {
 			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.id")))) {
 				uniqueId = request.getHeader(PortletProps.get("saml2.header.mapping.id"));
 			}
-			
-			user = UserLocalServiceUtil.getUserByOpenId(companyId, uniqueId);
 
 			user = PortalLDAPImporterUtil.importLDAPUser(
 					companyId, emailAddress, screenName);
 			
 			user.setOpenId(uniqueId);
+			
+			//try {
+			//	user = UserLocalServiceUtil.getUserByOpenId(companyId, uniqueId);
+			//} catch (PortalException e) {
+			//} catch (SystemException e) {
+			//}
 			
 			credentials = new String[3];
 
