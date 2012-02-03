@@ -127,24 +127,12 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 					
-		            LayoutSet layoutSet = LayoutSetLocalServiceUtil
-		            		.createLayoutSet(CounterLocalServiceUtil.increment(LayoutSet.class.getName()));
-		            
-		            layoutSet.setCompanyId(companyId);
-		            layoutSet.setGroupId(group.getGroupId());
-		            layoutSet.setPrivateLayout(true);
-		            
-		            LayoutSetLocalServiceUtil.addLayoutSet(layoutSet);
-		            
-		            layoutSet.setPrivateLayout(false);
-		            
-		            layoutSet = LayoutSetLocalServiceUtil
-		            		.createLayoutSet(CounterLocalServiceUtil.increment(LayoutSet.class.getName()));
+					LayoutSetLocalServiceUtil.addLayoutSet(group.getGroupId(), true);
 					
-		            LayoutSetLocalServiceUtil.addLayoutSet(layoutSet);
-		            
-		            addPrivatePage(user.getUserId(), group.getGroupId());
-		            
+					LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
+							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
+							"", new ServiceContext());
+					
 				} else {
 					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 				}
@@ -270,27 +258,12 @@ public class ConextAutoLogin implements AutoLogin {
 		return group;
 	}
 	
-	private static void addPrivatePage(long userId, long groupId) throws Exception {
+	public LayoutSet addLayoutSet() {
+		LayoutSet layoutSet = null;
 		
-		User user = UserLocalServiceUtil.getUser(userId);
 		
-		ServiceContext serviceContext = new ServiceContext();
-		serviceContext.setUuid(user.getUserUuid());
 		
-		Layout layout = LayoutLocalServiceUtil.addLayout(userId, groupId, true,
-				0, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, 
-				false, "", serviceContext);
-
-		LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
-		
-		layoutTypePortlet.setLayoutTemplateId(userId, "1_column");
-		layoutTypePortlet.addPortletId(userId, PortletKeys.DOCUMENT_LIBRARY, "column-1", -1);
-		layoutTypePortlet.addPortletId(userId, PortletKeys.WIKI,"column-1",-1);
-
-		LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
-				layout.isPrivateLayout(), layout.getLayoutId(),
-				layout.getTypeSettings());
-		   
+		return layoutSet;
 	}
 	
 	private static Log _log = LogFactoryUtil.getLog(ConextAutoLogin.class);
