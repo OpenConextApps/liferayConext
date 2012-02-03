@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
@@ -46,6 +47,10 @@ public class ConextAutoLogin implements AutoLogin {
 			}
 			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.screenname")))) {
 				screenName = request.getHeader(PortletProps.get("saml2.header.mapping.screenname"));
+				screenName = StringUtil.replace(
+						screenName,
+						new String[] {StringPool.SLASH, StringPool.UNDERLINE, StringPool.SPACE},
+						new String[] {StringPool.PERIOD, StringPool.PERIOD, StringPool.PERIOD});
 			}
 			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.id")))) {
 				uniqueId = request.getHeader(PortletProps.get("saml2.header.mapping.id"));
