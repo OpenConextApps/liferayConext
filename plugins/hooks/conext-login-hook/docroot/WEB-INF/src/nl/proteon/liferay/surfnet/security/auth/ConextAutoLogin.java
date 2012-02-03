@@ -117,7 +117,7 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 				}
-				Role role = RoleLocalServiceUtil.getRole(companyId, "Community Member");
+				Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 				
 				UserGroupRoleLocalServiceUtil.addUserGroupRoles(
 						user.getUserId(), 
@@ -194,7 +194,7 @@ public class ConextAutoLogin implements AutoLogin {
 		Group group = null;
 		
 		try {
-			GroupLocalServiceUtil.getGroup(companyId, name);
+			group = GroupLocalServiceUtil.getGroup(companyId, name);
 		} catch (Exception e) {
 		}
 		return group;
