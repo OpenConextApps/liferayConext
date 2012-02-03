@@ -127,7 +127,7 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 					
-					LayoutSetLocalServiceUtil.addLayoutSet(group.getGroupId(), true);
+					LayoutSetLocalServiceUtil.addLayoutSet(group.getClassPK(), true);
 					
 					LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
 							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
@@ -256,14 +256,6 @@ public class ConextAutoLogin implements AutoLogin {
 			_log.error(e,e);
 		}
 		return group;
-	}
-	
-	public LayoutSet addLayoutSet() {
-		LayoutSet layoutSet = null;
-		
-		
-		
-		return layoutSet;
 	}
 	
 	private static Log _log = LogFactoryUtil.getLog(ConextAutoLogin.class);
