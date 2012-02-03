@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -28,6 +29,7 @@ import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
@@ -112,7 +114,9 @@ public class ConextAutoLogin implements AutoLogin {
 
 			for(OpenSocialGroup openSocialGroup : openSocialGroups) {
 				Group group = null;
+				
 				group = getGroup(companyId, openSocialGroup.getTitle());
+				
 				if(group==null) {
 					group = addGroup(
 							user.getUserId(),
@@ -122,7 +126,17 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 					
-					addPrivatePage(user.getUserId(), group.getGroupId());
+		            LayoutSet layoutSet = LayoutSetLocalServiceUtil
+		            		.createLayoutSet(CounterLocalServiceUtil.increment(LayoutSet.class.getName()));
+		            
+		            layoutSet.setCompanyId(companyId);
+		            layoutSet.setGroupId(group.getGroupId());
+		            layoutSet.setPrivateLayout(true);
+		            
+		            LayoutSetLocalServiceUtil.addLayoutSet(layoutSet);
+					
+		            addPrivatePage(user.getUserId(), group.getGroupId());
+		            
 				} else {
 					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 				}
