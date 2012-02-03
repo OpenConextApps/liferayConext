@@ -119,7 +119,7 @@ public class ConextAutoLogin implements AutoLogin {
 				
 				if(group==null) {
 					
-					group = addGroup(
+					group = this.addGroup(
 							user.getUserId(),
 							companyId, 
 							openSocialGroup.getTitle(),
