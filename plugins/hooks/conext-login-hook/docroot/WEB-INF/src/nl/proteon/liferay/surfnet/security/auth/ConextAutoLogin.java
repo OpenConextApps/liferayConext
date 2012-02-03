@@ -134,10 +134,7 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		try {
 			user = UserLocalServiceUtil.getUserByOpenId(companyId, openId);
-		} catch (PortalException e) {
-			_log.error(e,e);
-		} catch (SystemException e) {
-			_log.error(e,e);
+		} catch (Exception e) {
 		}
 		return user;
 	}
@@ -189,10 +186,7 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		try {
 			GroupLocalServiceUtil.getGroup(companyId, name);
-		} catch (PortalException e) {
-			_log.error(e,e);
-		} catch (SystemException e) {
-			_log.error(e,e);
+		} catch (Exception e) {
 		}
 		return group;
 	}
