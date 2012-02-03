@@ -7,10 +7,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -33,9 +35,13 @@ public class ConextAutoLogin implements AutoLogin {
 		try {
 			long companyId = PortalUtil.getCompanyId(request);
 			
-			String uniqueId = StringPool.BLANK;
+			
 			String emailAddress = StringPool.BLANK;
+			String firstName = StringPool.BLANK;
+			String lastName = StringPool.BLANK;
+			String middleName = StringPool.BLANK;
 			String screenName = StringPool.BLANK;
+			String uniqueId = StringPool.BLANK;
 			
 			User user = null;
 
@@ -57,17 +63,52 @@ public class ConextAutoLogin implements AutoLogin {
 			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.id")))) {
 				uniqueId = request.getHeader(PortletProps.get("saml2.header.mapping.id"));
 			}
+			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.fullname"))) 
+					&& PortletProps.get("saml2.header.mapping.firstname").equals("")
+					&& PortletProps.get("saml2.header.mapping.middlename").equals("")
+					&& PortletProps.get("saml2.header.mapping.lastname").equals("")) {
+				String fullName = request.getHeader(PortletProps.get("saml2.header.mapping.fullname"));
+				//Simplified name extraction.
+				firstName = fullName.substring(0, fullName.indexOf(" "));
+				middleName = fullName.substring(fullName.indexOf(" "),fullName.lastIndexOf(" "));
+				lastName = fullName.substring(fullName.lastIndexOf(" "));
+			} else {
+				firstName = request.getHeader(PortletProps.get("saml2.header.mapping.firstname"));
+				middleName = request.getHeader(PortletProps.get("saml2.header.mapping.middlename"));
+				lastName = request.getHeader(PortletProps.get("saml2.header.mapping.lastname"));
+			} 
 
-			user = PortalLDAPImporterUtil.importLDAPUser(
-					companyId, emailAddress, screenName);
+			try {
+				user = UserLocalServiceUtil.getUserByOpenId(companyId, uniqueId);
+				
+				user.setCompanyId(companyId);
+				user.setCreateDate(DateUtil.newDate());
+				user.setEmailAddress(emailAddress);
+				user.setFirstName(firstName);
+				user.setMiddleName(middleName);
+				user.setLastName(lastName);
+				user.setScreenName(screenName);
+				user.setOpenId(uniqueId);
+				
+				UserLocalServiceUtil.updateUser(user);
+				
+			} catch (Exception e) {
+				user = UserLocalServiceUtil
+						.createUser(CounterLocalServiceUtil.increment(User.class.getName()));
+				
+				user.setCompanyId(companyId);
+				user.setCreateDate(DateUtil.newDate());
+				user.setEmailAddress(emailAddress);
+				user.setFirstName(firstName);
+				user.setMiddleName(middleName);
+				user.setLastName(lastName);
+				user.setScreenName(screenName);
+				user.setOpenId(uniqueId);
+				
+				UserLocalServiceUtil.addUser(user);
+			} 
 			
-			user.setOpenId(uniqueId);
-			
-			//try {
-			//	user = UserLocalServiceUtil.getUserByOpenId(companyId, uniqueId);
-			//} catch (PortalException e) {
-			//} catch (SystemException e) {
-			//}
+
 			
 			credentials = new String[3];
 
