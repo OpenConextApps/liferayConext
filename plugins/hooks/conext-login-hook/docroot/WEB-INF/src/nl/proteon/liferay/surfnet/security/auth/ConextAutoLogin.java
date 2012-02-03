@@ -67,16 +67,23 @@ public class ConextAutoLogin implements AutoLogin {
 					&& PortletProps.get("saml2.header.mapping.firstname").equals("")
 					&& PortletProps.get("saml2.header.mapping.middlename").equals("")
 					&& PortletProps.get("saml2.header.mapping.lastname").equals("")) {
+			
 				String fullName = request.getHeader(PortletProps.get("saml2.header.mapping.fullname"));
-				//Simplified name extraction.
+				
 				firstName = fullName.substring(0, fullName.indexOf(" "));
-				middleName = fullName.substring(fullName.indexOf(" "),fullName.lastIndexOf(" "));
+				middleName = "";
 				lastName = fullName.substring(fullName.lastIndexOf(" ")+1);
+			
 			} else {
+				
 				firstName = request.getHeader(PortletProps.get("saml2.header.mapping.firstname"));
 				middleName = request.getHeader(PortletProps.get("saml2.header.mapping.middlename"));
 				lastName = request.getHeader(PortletProps.get("saml2.header.mapping.lastname"));
+			
 			} 
+			
+			firstName = StringUtil.upperCaseFirstLetter(firstName);
+			lastName = StringUtil.upperCaseFirstLetter(lastName);
 			
 			user = getUserByOpenId(companyId, openId);
 			
