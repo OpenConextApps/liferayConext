@@ -123,9 +123,9 @@ public class ConextAutoLogin implements AutoLogin {
 		try {
 			user = UserLocalServiceUtil.getUserByOpenId(companyId, openId);
 		} catch (PortalException e) {
-			_log.debug(e,e);
+			_log.error(e,e);
 		} catch (SystemException e) {
-			_log.debug(e,e);
+			_log.error(e,e);
 		}
 		return user;
 	}
@@ -164,7 +164,9 @@ public class ConextAutoLogin implements AutoLogin {
 					middleName, lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay, birthdayYear, jobTitle,
 					groupIds, organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 		} catch (PortalException e) {
+			_log.error(e,e);
 		} catch (SystemException e) {
+			_log.error(e,e);
 		}
 		
 		return user;
