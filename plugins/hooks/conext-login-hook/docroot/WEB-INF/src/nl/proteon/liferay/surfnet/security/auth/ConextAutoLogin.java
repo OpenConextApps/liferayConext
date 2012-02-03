@@ -19,16 +19,21 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.util.portlet.PortletProps;
 
 public class ConextAutoLogin implements AutoLogin {
@@ -116,6 +121,10 @@ public class ConextAutoLogin implements AutoLogin {
 							openSocialGroup.getDescription(),
 							"/" + openSocialGroup.getId()
 							);
+					
+					addPrivatePage(user.getUserId(), group.getGroupId());
+				} else {
+					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 				}
 				Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 				
@@ -220,6 +229,42 @@ public class ConextAutoLogin implements AutoLogin {
 			_log.error(e,e);
 		}
 		return group;
+	}
+	
+	public Group updateGroup(long companyId, long groupId, String description) {
+		Group group = null;
+		
+		try {
+			group = GroupLocalServiceUtil.getGroup(groupId);
+
+			group.setDescription(description);
+			
+			GroupLocalServiceUtil.updateGroup(group);
+		} catch (SystemException e) {
+			_log.error(e,e);
+		} catch (PortalException e) {
+			_log.error(e,e);
+		}
+		return group;
+	}
+	
+	private static void addPrivatePage(long userId, long groupId) throws Exception {
+		ServiceContext serviceContext = new ServiceContext();
+		
+		Layout layout = LayoutLocalServiceUtil.addLayout(userId, groupId, true,
+				0, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, 
+				false, "", serviceContext);
+
+		LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
+		
+		layoutTypePortlet.setLayoutTemplateId(userId, "1_column");
+		layoutTypePortlet.addPortletId(userId, PortletKeys.DOCUMENT_LIBRARY, "column-1", -1);
+		layoutTypePortlet.addPortletId(userId, PortletKeys.WIKI,"column-1",-1);
+
+		LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
+				layout.isPrivateLayout(), layout.getLayoutId(),
+				layout.getTypeSettings());
+		   
 	}
 	
 	private static Log _log = LogFactoryUtil.getLog(ConextAutoLogin.class);
