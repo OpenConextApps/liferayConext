@@ -1,12 +1,11 @@
 package nl.proteon.liferay.surfnet.security.auth;
 
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import nl.proteon.liferay.surfnet.security.opensocial.OpenSocialGroupLocalServiceUtil;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -44,11 +43,6 @@ public class ConextAutoLogin implements AutoLogin {
 			String openId = StringPool.BLANK;
 			
 			User user = null;
-
-			//List<String> headers = Collections.list((Enumeration<String>)request.getHeaderNames());
-			//for(String headerName : headers) {
-			//	_log.info(headerName + ": " + request.getHeader(headerName));
-			//}
 			
 			if(Validator.isNotNull(request.getHeader(PortletProps.get("saml2.header.mapping.email")))) {
 				emailAddress = request.getHeader(PortletProps.get("saml2.header.mapping.email"));
@@ -100,6 +94,8 @@ public class ConextAutoLogin implements AutoLogin {
 			} else {
 				user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
 			}
+			
+			OpenSocialGroupLocalServiceUtil.getOpenSocialGroups(user.getUserId());
 
 			credentials = new String[3];
 
@@ -113,8 +109,6 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		return credentials;
 	}
-	
-	private static Log _log = LogFactoryUtil.getLog(ConextAutoLogin.class);
 
 	public User getUserByOpenId(long companyId, String openId) {
 		User user = null;
@@ -169,4 +163,6 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		return user;
 	}
+	
+	private static Log _log = LogFactoryUtil.getLog(ConextAutoLogin.class);
 }
