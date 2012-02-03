@@ -8,7 +8,6 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -89,19 +88,19 @@ public class ConextAutoLogin implements AutoLogin {
 			_log.info("unique: "+openId);
 			_log.info("companyId: "+companyId);
 			
-			if(!(user==null)) {
-				user.setCompanyId(companyId);
-				user.setCreateDate(DateUtil.newDate());
-				user.setEmailAddress(emailAddress);
-				user.setFirstName(firstName);
-				user.setMiddleName(middleName);
-				user.setLastName(lastName);
-				user.setScreenName(screenName);
+			//if(!(user==null)) {
+			//	user.setCompanyId(companyId);
+			//	user.setCreateDate(DateUtil.newDate());
+			//	user.setEmailAddress(emailAddress);
+			//	user.setFirstName(firstName);
+			//	user.setMiddleName(middleName);
+			//	user.setLastName(lastName);
+			//	user.setScreenName(screenName);
 				
-				UserLocalServiceUtil.updateUser(user);
-			} else {
+			//	UserLocalServiceUtil.updateUser(user);
+			//} else {
 				user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
-			}
+			//}
 
 			credentials = new String[3];
 
