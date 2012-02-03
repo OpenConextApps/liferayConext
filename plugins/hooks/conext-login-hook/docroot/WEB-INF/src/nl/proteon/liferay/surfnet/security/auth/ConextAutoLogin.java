@@ -78,6 +78,12 @@ public class ConextAutoLogin implements AutoLogin {
 			
 			user = getUserByOpenId(companyId, uniqueId);
 			
+			_log.info("first: "+firstName);
+			_log.info("middle: "+middleName);
+			_log.info("last: "+lastName);
+			_log.info("unique: "+uniqueId);
+			_log.info("companyId: "+companyId);
+			
 			if(!(user==null)) {
 				user.setCompanyId(companyId);
 				user.setCreateDate(DateUtil.newDate());
