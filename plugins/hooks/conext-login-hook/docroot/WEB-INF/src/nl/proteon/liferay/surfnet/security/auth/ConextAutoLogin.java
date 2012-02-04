@@ -228,7 +228,7 @@ public class ConextAutoLogin implements AutoLogin {
 		
 			ServiceContext serviceContext = new ServiceContext();		
 
-			GroupLocalServiceUtil.addGroup(userId, className, classPK, name, 
+			group = GroupLocalServiceUtil.addGroup(userId, className, classPK, name, 
 					description, type, friendlyURL, site, active, serviceContext);
 		} catch (PortalException e) {
 			_log.error(e,e);
@@ -246,7 +246,7 @@ public class ConextAutoLogin implements AutoLogin {
 
 			group.setDescription(description);
 			
-			GroupLocalServiceUtil.updateGroup(group);
+			group = GroupLocalServiceUtil.updateGroup(group);
 		} catch (SystemException e) {
 			_log.error(e,e);
 		} catch (PortalException e) {
