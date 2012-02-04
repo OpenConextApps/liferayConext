@@ -128,6 +128,10 @@ public class ConextAutoLogin implements AutoLogin {
 					
 				} else {
 					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
+					
+					LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
+							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
+							"", new ServiceContext());
 				}
 				Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 				
