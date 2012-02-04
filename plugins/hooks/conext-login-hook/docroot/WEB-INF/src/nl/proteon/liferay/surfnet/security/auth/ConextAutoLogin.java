@@ -3,6 +3,7 @@ package nl.proteon.liferay.surfnet.security.auth;
 import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.PortletPreferences;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -28,6 +29,7 @@ import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
@@ -131,9 +133,20 @@ public class ConextAutoLogin implements AutoLogin {
 					
 					LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
 					layoutTypePortlet.setLayoutTemplateId(user.getUserId(), "1_column");
-					layoutTypePortlet.addPortletId(user.getUserId(), PortletKeys.DOCUMENT_LIBRARY, "column-1", -1, false);
-					
-				    LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
+					String documentLibraryPortletId = layoutTypePortlet.addPortletId(user.getUserId(), PortletKeys.DOCUMENT_LIBRARY, "column-1", -1, false);
+				    
+				    long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+				    int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
+				    
+				    PortletPreferences prefs = PortletPreferencesLocalServiceUtil.getPreferences(companyId, 
+				    		ownerId, ownerType, layout.getPlid(), documentLibraryPortletId);
+				    
+				    prefs.setValue("portletSetupShowBorders", "false");
+				    
+				    PortletPreferencesLocalServiceUtil.updatePreferences(ownerId, ownerType, layout
+                            .getPlid(), documentLibraryPortletId, prefs);
+				    
+				    layout = LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
 				    		layout.isPrivateLayout(), layout.getLayoutId(),
 				    		layout.getTypeSettings());
 					
