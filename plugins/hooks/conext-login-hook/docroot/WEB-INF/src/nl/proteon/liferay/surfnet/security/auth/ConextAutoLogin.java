@@ -133,6 +133,10 @@ public class ConextAutoLogin implements AutoLogin {
 					layoutTypePortlet.setLayoutTemplateId(user.getUserId(), "1_column");
 					layoutTypePortlet.addPortletId(user.getUserId(), PortletKeys.DOCUMENT_LIBRARY, "column-1", -1, false);
 					
+				    LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
+				    		layout.isPrivateLayout(), layout.getLayoutId(),
+				    		layout.getTypeSettings());
+					
 				} else {
 					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 				}
