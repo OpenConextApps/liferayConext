@@ -19,7 +19,9 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
@@ -31,6 +33,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.util.portlet.PortletProps;
 
 public class ConextAutoLogin implements AutoLogin {
@@ -122,16 +125,16 @@ public class ConextAutoLogin implements AutoLogin {
 							"/" + openSocialGroup.getId()
 							);
 				
-					LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
+					Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
 							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
 							"", new ServiceContext());
+					
+					LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
+					layoutTypePortlet.setLayoutTemplateId(user.getUserId(), "1_column");
+					layoutTypePortlet.addPortletId(user.getUserId(), PortletKeys.DOCUMENT_LIBRARY, "column-1", -1);
 					
 				} else {
 					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
-					
-					LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
-							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
-							"", new ServiceContext());
 				}
 				Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 				
