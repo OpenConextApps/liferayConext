@@ -60,7 +60,9 @@ public class ServicePreAction extends Action {
 							openSocialGroup.getDescription(),
 							"/" + openSocialGroup.getId().substring(30)
 							);
-			
+					
+					_log.info("Group " + openSocialGroup.getId() + "added as " + group.getName());
+					
 					Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
 							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
 							"", new ServiceContext());
@@ -93,6 +95,9 @@ public class ServicePreAction extends Action {
 						user.getUserId(), 
 						group.getGroupId(), 
 						new long[] { role.getRoleId() });
+				
+				_log.info("User " + user.getOpenId() + "added to " + group.getName());
+				
 			}
 			
 			Map<String, OpenSocialGroup> openSocialGroupsMap = new HashMap<String, OpenSocialGroup>();
@@ -105,6 +110,7 @@ public class ServicePreAction extends Action {
 			for(Group group : groups) {
 				if(openSocialGroupsMap.get(group.getName()) == null){
 					GroupLocalServiceUtil.unsetUserGroups(user.getUserId(), new long[] { group.getGroupId() });
+					_log.info("User " + user.getOpenId() + "removed from " + group.getName());
 				}
 			}
 
