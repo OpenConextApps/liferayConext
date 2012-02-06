@@ -1,6 +1,8 @@
 package nl.proteon.liferay.surfnet.security.opensocial.servlet.events.pre;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.ReadOnlyException;
@@ -10,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import nl.proteon.liferay.surfnet.security.opensocial.OpenSocialGroupLocalServiceUtil;
 import nl.proteon.liferay.surfnet.security.opensocial.exceptions.OpenSocialException;
 import nl.proteon.liferay.surfnet.security.opensocial.model.OpenSocialGroup;
-
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
@@ -92,6 +93,19 @@ public class ServicePreAction extends Action {
 						user.getUserId(), 
 						group.getGroupId(), 
 						new long[] { role.getRoleId() });
+			}
+			
+			Map<String, OpenSocialGroup> openSocialGroupsMap = new HashMap<String, OpenSocialGroup>();
+			for(OpenSocialGroup openSocialGroup : openSocialGroups){
+				openSocialGroupsMap.put(openSocialGroup.getTitle(), openSocialGroup);
+			}
+			
+			List<Group> groups = GroupLocalServiceUtil.getUserGroups(user.getUserId(), true);
+			
+			for(Group group : groups) {
+				if(openSocialGroupsMap.get(group.getName()) == null){
+					GroupLocalServiceUtil.unsetUserGroups(user.getUserId(), new long[] { group.getGroupId() });
+				}
 			}
 
 		} catch (PortalException e) {
