@@ -1,0 +1,9 @@
+body {
+	font-family: "Lucida Sans Unicode","Lucida Grande",Arial,sans-serif;
+	font-size: 11px;
+	background-color: #F4F3EE;
+	background-image: url("http://www.proteon.nl/++resource++proteonxsr.theme.images/background_stripe.jpg");
+	background-attachment: fixed;
+	background-repeat: repeat-x;
+	color: #505050;
+}
