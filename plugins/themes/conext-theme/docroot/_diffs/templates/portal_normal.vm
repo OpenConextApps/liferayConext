@@ -19,7 +19,6 @@ $theme.include($body_top_include)
 #end
 
 <div id="wrapper">
-	<a href="#main-content" id="skip-to-content">#language("skip-to-content")</a>
 
 	<header id="banner" role="banner">
 		<div id="heading">
@@ -34,10 +33,6 @@ $theme.include($body_top_include)
 					</span>
 				#end
 			</h1>
-
-			<h2 class="page-title">
-				<span>$the_title</span>
-			</h2>
 		</div>
 
 		#if (!$is_signed_in)
