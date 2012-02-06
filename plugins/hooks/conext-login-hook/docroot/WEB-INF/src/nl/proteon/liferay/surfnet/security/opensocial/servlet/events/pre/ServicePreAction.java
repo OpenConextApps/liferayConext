@@ -96,8 +96,6 @@ public class ServicePreAction extends Action {
 						group.getGroupId(), 
 						new long[] { role.getRoleId() });
 				
-				_log.info("User " + user.getOpenId() + "added to " + group.getName());
-				
 			}
 			
 			Map<String, OpenSocialGroup> openSocialGroupsMap = new HashMap<String, OpenSocialGroup>();
@@ -110,7 +108,7 @@ public class ServicePreAction extends Action {
 			for(Group group : groups) {
 				if(openSocialGroupsMap.get(group.getName()) == null){
 					GroupLocalServiceUtil.unsetUserGroups(user.getUserId(), new long[] { group.getGroupId() });
-					_log.info("User " + user.getOpenId() + "removed from " + group.getName());
+					_log.info("User " + user.getOpenId() + " removed from " + group.getName());
 				}
 			}
 
