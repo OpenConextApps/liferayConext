@@ -124,7 +124,7 @@ public class ConextAutoLogin implements AutoLogin {
 							companyId, 
 							openSocialGroup.getTitle(),
 							openSocialGroup.getDescription(),
-							"/" + openSocialGroup.getId().replace("urn-collab-group-surfteams.nl", "").replace("-", ":")
+							"/" + openSocialGroup.getId().substring(30)
 							);
 				
 					Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
