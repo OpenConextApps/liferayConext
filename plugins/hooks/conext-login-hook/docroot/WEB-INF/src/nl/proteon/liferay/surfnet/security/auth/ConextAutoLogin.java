@@ -119,12 +119,12 @@ public class ConextAutoLogin implements AutoLogin {
 				
 				if(group==null) {
 					
-					group = this.addGroup(
+					group = addGroup(
 							user.getUserId(),
 							companyId, 
 							openSocialGroup.getTitle(),
 							openSocialGroup.getDescription(),
-							"/" + openSocialGroup.getId()
+							"/" + openSocialGroup.getId().replace("urn-collab-group-surfteams.nl", "").replace("-", ":")
 							);
 				
 					Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
