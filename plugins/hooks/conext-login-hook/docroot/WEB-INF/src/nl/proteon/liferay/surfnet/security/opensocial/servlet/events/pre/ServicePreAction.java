@@ -26,6 +26,7 @@ import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
@@ -96,11 +97,17 @@ public class ServicePreAction extends Action {
 						group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 					}
 					Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
-				
-					UserGroupRoleLocalServiceUtil.addUserGroupRoles(
-							user.getUserId(), 
-							group.getGroupId(), 
-							new long[] { role.getRoleId() });
+					try {
+						UserGroupRoleLocalServiceUtil.addUserGroupRoles(
+								user.getUserId(), 
+								group.getGroupId(), 
+								new long[] { role.getRoleId() });
+						_log.debug("Set membership for "+ user.getOpenId() + " on " + group.getName());
+					} catch (PortalException e) {
+						_log.error(e,e);
+					} catch (SystemException e) {
+						_log.error(e,e);
+					}
 					
 				}
 				
