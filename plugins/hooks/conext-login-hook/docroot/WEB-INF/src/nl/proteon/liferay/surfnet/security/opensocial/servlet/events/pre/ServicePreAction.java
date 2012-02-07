@@ -103,7 +103,6 @@ public class ServicePreAction extends Action {
 					try {
 						UserServiceUtil.setUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
 						UserLocalServiceUtil.setUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
-						LiveUsers.joinGroup(companyId, group.getGroupId(), new long[] { user.getUserId() });
 						Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 						UserGroupRoleLocalServiceUtil.addUserGroupRoles(
 								user.getUserId(), 
