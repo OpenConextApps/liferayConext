@@ -1,5 +1,6 @@
 package nl.proteon.liferay.surfnet.security.opensocial.servlet.events.pre;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.sun.jndi.toolkit.url.UrlUtil;
 
 public class ServicePreAction extends Action {
 
@@ -62,7 +64,7 @@ public class ServicePreAction extends Action {
 								companyId, 
 								openSocialGroup.getTitle(),
 								openSocialGroup.getDescription(),
-								"/" + openSocialGroup.getId().substring(30)
+								"/" + UrlUtil.encode(openSocialGroup.getId().substring(30), "UTF8").toString()
 								);
 						
 						_log.info("Group " + openSocialGroup.getId() + " added as " + group.getName());
@@ -125,6 +127,9 @@ public class ServicePreAction extends Action {
 			_log.debug(e,e);
 		} catch (ReadOnlyException e) {
 			_log.debug(e,e);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
