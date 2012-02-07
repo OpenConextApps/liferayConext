@@ -100,6 +100,7 @@ public class ServicePreAction extends Action {
 					}
 					
 					try {
+						UserServiceUtil.addGroupUsers(group.getGroupId(), new long[] { user.getUserId() }, null);
 						UserServiceUtil.setUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
 						UserLocalServiceUtil.setUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
 						Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
