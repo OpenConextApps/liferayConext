@@ -94,6 +94,7 @@ public class ServicePreAction extends Action {
 								layout.getTypeSettings());
 					
 					} else {
+						_log.info("Group " + openSocialGroup.getId() + " already exists");
 						group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 					}
 					Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
@@ -135,8 +136,7 @@ public class ServicePreAction extends Action {
 		} catch (ReadOnlyException e) {
 			_log.debug(e,e);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			_log.debug(e,e);
 		}
 	}
 	
