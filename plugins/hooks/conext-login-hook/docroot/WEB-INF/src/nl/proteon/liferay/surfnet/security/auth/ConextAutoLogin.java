@@ -138,8 +138,8 @@ public class ConextAutoLogin implements AutoLogin {
 		User user = null;
 		
 		boolean autoPassword = false;
-		String password1 = "ASDF7890";
-		String password2 = "ASDF7890";
+		String password1 = "ASDF7890jkl";
+		String password2 = "ASDF7890jkl";
 		boolean autoScreenName = true;
 		long facebookId = 0;
 		int prefixId = -1;
