@@ -39,6 +39,7 @@ public class ConextAutoLogin implements AutoLogin {
 			PasswordPolicy passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(companyId);
 			
 			if(passwordPolicy.getChangeRequired()) {
+				_log.debug("Fixing password policy change required to false");
 				passwordPolicy.setChangeRequired(false);
 				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(passwordPolicy);
 			}
