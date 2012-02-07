@@ -33,6 +33,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
+import com.sun.jndi.toolkit.url.UrlUtil;
 
 public class ServicePreAction extends Action {
 
@@ -52,7 +53,9 @@ public class ServicePreAction extends Action {
 				group = getGroup(companyId, openSocialGroup.getTitle());
 			
 				if(group==null) {
-				
+					
+					_log.info("Group " + openSocialGroup.getId() + " is new");
+					
 					group = addGroup(
 							user.getUserId(),
 							companyId, 
@@ -61,7 +64,7 @@ public class ServicePreAction extends Action {
 							"/" + openSocialGroup.getId().substring(30)
 							);
 					
-					_log.info("Group " + openSocialGroup.getId() + "added as " + group.getName());
+					_log.info("Group " + openSocialGroup.getId() + " added as " + group.getName());
 					
 					Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
 							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
