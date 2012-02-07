@@ -13,9 +13,11 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.model.PasswordPolicy;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
+import com.liferay.portal.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
@@ -29,8 +31,17 @@ public class ConextAutoLogin implements AutoLogin {
 
 		String[] credentials = null;
 		
+
+		
 		try {
 			long companyId = PortalUtil.getCompanyId(request);
+			
+			PasswordPolicy passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(companyId);
+			
+			if(passwordPolicy.getChangeRequired()) {
+				passwordPolicy.setChangeRequired(false);
+				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(passwordPolicy);
+			}
 			
 			String emailAddress = StringPool.BLANK;
 			String firstName = StringPool.BLANK;
