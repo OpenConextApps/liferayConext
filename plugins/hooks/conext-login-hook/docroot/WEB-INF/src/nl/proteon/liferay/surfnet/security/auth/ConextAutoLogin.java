@@ -102,7 +102,7 @@ public class ConextAutoLogin implements AutoLogin {
 					UserLocalServiceUtil.updateUser(user);
 					
 				} else {
-					user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
+					user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);
 				}
 				
 				_log.info("User " + user.getOpenId() + " logged in");
@@ -136,7 +136,7 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		User user = null;
 		
-		boolean autoPassword = true;
+		boolean autoPassword = false;
 		String password1 = "ASDF7890";
 		String password2 = "ASDF7890";
 		boolean autoScreenName = true;
