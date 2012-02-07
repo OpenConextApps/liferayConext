@@ -13,10 +13,12 @@ import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.PasswordPolicy;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.AutoLogin;
 import com.liferay.portal.security.auth.AutoLoginException;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.PasswordPolicyLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -30,6 +32,14 @@ public class ConextAutoLogin implements AutoLogin {
 			throws AutoLoginException {
 
 		String[] credentials = null;
+		
+		try {
+			Group group = GroupLocalServiceUtil.getCompanyGroup(PortalUtil.getCompanyId(request));
+			group.getPublicLayoutSet().setThemeId("conext_WAR_conexttheme");
+		} catch (PortalException e1) {
+		} catch (SystemException e1) {
+		}
+		
 		
 		if(request.getHeader(PortletProps.get("saml2.header.mapping.email")) != null) {
 		
