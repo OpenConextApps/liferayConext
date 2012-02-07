@@ -34,6 +34,7 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
 import com.sun.jndi.toolkit.url.UrlUtil;
@@ -101,7 +102,7 @@ public class ServicePreAction extends Action {
 					
 					Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 					
-					UserGroupLocalServiceUtil.addGroupUserGroups(group.getGroupId(), new long[] {user.getUserId()});
+					UserLocalServiceUtil.addUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
 					
 					try {
 						UserGroupRoleLocalServiceUtil.addUserGroupRoles(
