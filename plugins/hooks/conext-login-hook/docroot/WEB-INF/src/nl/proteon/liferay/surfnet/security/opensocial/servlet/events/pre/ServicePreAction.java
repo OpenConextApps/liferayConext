@@ -33,6 +33,7 @@ import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
@@ -101,6 +102,7 @@ public class ServicePreAction extends Action {
 					
 					try {
 						UserServiceUtil.setUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
+						UserLocalServiceUtil.setUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
 						LiveUsers.joinGroup(companyId, group.getGroupId(), new long[] { user.getUserId() });
 						Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 						UserGroupRoleLocalServiceUtil.addUserGroupRoles(
