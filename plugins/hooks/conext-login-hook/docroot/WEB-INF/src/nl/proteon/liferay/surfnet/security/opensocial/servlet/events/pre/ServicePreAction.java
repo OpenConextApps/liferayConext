@@ -100,11 +100,8 @@ public class ServicePreAction extends Action {
 						group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 					}
 					
-					Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
-					
-					UserLocalServiceUtil.addUserGroupUsers(group.getGroupId(), new long[] { user.getUserId() });
-					
 					try {
+						Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
 						UserGroupRoleLocalServiceUtil.addUserGroupRoles(
 								user.getUserId(), 
 								group.getGroupId(), 
