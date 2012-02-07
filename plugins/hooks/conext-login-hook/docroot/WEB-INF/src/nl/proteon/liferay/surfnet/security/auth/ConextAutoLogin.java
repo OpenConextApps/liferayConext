@@ -164,6 +164,10 @@ public class ConextAutoLogin implements AutoLogin {
 					openId, locale, firstName, 
 					middleName, lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay, birthdayYear, jobTitle,
 					groupIds, organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
+			
+			user.setPasswordModified(true);
+			
+			user = UserLocalServiceUtil.updateUser(user);
 		} catch (PortalException e) {
 			_log.error(e,e);
 		} catch (SystemException e) {
