@@ -33,7 +33,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portal.util.PortletKeys;
-import com.sun.jndi.toolkit.url.UrlUtil;
 
 public class ServicePreAction extends Action {
 

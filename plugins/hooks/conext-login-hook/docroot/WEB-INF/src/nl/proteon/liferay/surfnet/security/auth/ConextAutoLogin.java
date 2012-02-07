@@ -31,90 +31,91 @@ public class ConextAutoLogin implements AutoLogin {
 
 		String[] credentials = null;
 		
-
+		if(request.getHeader(PortletProps.get("saml2.header.mapping.email")) != null) {
 		
-		try {
-			long companyId = PortalUtil.getCompanyId(request);
-			
-			PasswordPolicy passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(companyId);
-			
-			if(passwordPolicy.getChangeRequired()) {
-				_log.debug("Fixing password policy change required to false");
-				passwordPolicy.setChangeRequired(false);
-				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(passwordPolicy);
-			}
-			
-			String emailAddress = StringPool.BLANK;
-			String firstName = StringPool.BLANK;
-			String lastName = StringPool.BLANK;
-			String middleName = StringPool.BLANK;
-			String screenName = StringPool.BLANK;
-			String openId = StringPool.BLANK;
-			
-			User user = null;
-			
-			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.email")).equals(""))) {
-				emailAddress = request.getHeader(PortletProps.get("saml2.header.mapping.email"));
-			}
-			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.screenname")).equals(""))) {
-				screenName = request.getHeader(PortletProps.get("saml2.header.mapping.screenname"));
-				screenName = StringUtil.replace(
-						screenName,
-						new String[] {StringPool.SLASH, StringPool.UNDERLINE, StringPool.SPACE},
-						new String[] {StringPool.PERIOD, StringPool.PERIOD, StringPool.PERIOD});
-			}
-			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.id")).equals(""))) {
-				openId = request.getHeader(PortletProps.get("saml2.header.mapping.id"));
-			}
-			if(!(request.getHeader(PortletProps.get("saml2.header.mapping.fullname")).equals("")) 
-					&& PortletProps.get("saml2.header.mapping.firstname").equals("")
-					&& PortletProps.get("saml2.header.mapping.middlename").equals("")
-					&& PortletProps.get("saml2.header.mapping.lastname").equals("")) {
-			
-				String fullName = request.getHeader(PortletProps.get("saml2.header.mapping.fullname"));
+			try {
+				long companyId = PortalUtil.getCompanyId(request);
 				
-				firstName = fullName.substring(0, fullName.indexOf(" "));
-				middleName = "";
-				lastName = fullName.substring(fullName.lastIndexOf(" ")+1);
-			
-			} else {
+				PasswordPolicy passwordPolicy = PasswordPolicyLocalServiceUtil.getDefaultPasswordPolicy(companyId);
 				
-				firstName = request.getHeader(PortletProps.get("saml2.header.mapping.firstname"));
-				middleName = request.getHeader(PortletProps.get("saml2.header.mapping.middlename"));
-				lastName = request.getHeader(PortletProps.get("saml2.header.mapping.lastname"));
-			
-			} 
-			
-			firstName = StringUtil.upperCaseFirstLetter(firstName);
-			lastName = StringUtil.upperCaseFirstLetter(lastName);
-			
-			user = getUserByOpenId(companyId, openId);
-			
-			if(!(user==null)) {
-				user.setCompanyId(companyId);
-				user.setCreateDate(DateUtil.newDate());
-				user.setEmailAddress(emailAddress);
-				user.setFirstName(firstName);
-				user.setMiddleName(middleName);
-				user.setLastName(lastName);
-				user.setScreenName(screenName);
+				if(passwordPolicy.getChangeRequired()) {
+					_log.debug("Setting password policy password change required to: false");
+					passwordPolicy.setChangeRequired(false);
+					PasswordPolicyLocalServiceUtil.updatePasswordPolicy(passwordPolicy);
+				}
 				
-				UserLocalServiceUtil.updateUser(user);
+				String emailAddress = StringPool.BLANK;
+				String firstName = StringPool.BLANK;
+				String lastName = StringPool.BLANK;
+				String middleName = StringPool.BLANK;
+				String screenName = StringPool.BLANK;
+				String openId = StringPool.BLANK;
 				
-			} else {
-				user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
+				User user = null;
+				
+				if(!(request.getHeader(PortletProps.get("saml2.header.mapping.email")).equals(""))) {
+					emailAddress = request.getHeader(PortletProps.get("saml2.header.mapping.email"));
+				}
+				if(!(request.getHeader(PortletProps.get("saml2.header.mapping.screenname")).equals(""))) {
+					screenName = request.getHeader(PortletProps.get("saml2.header.mapping.screenname"));
+					screenName = StringUtil.replace(
+							screenName,
+							new String[] {StringPool.SLASH, StringPool.UNDERLINE, StringPool.SPACE},
+							new String[] {StringPool.PERIOD, StringPool.PERIOD, StringPool.PERIOD});
+				}
+				if(!(request.getHeader(PortletProps.get("saml2.header.mapping.id")).equals(""))) {
+					openId = request.getHeader(PortletProps.get("saml2.header.mapping.id"));
+				}
+				if(!(request.getHeader(PortletProps.get("saml2.header.mapping.fullname")).equals("")) 
+						&& PortletProps.get("saml2.header.mapping.firstname").equals("")
+						&& PortletProps.get("saml2.header.mapping.middlename").equals("")
+						&& PortletProps.get("saml2.header.mapping.lastname").equals("")) {
+				
+					String fullName = request.getHeader(PortletProps.get("saml2.header.mapping.fullname"));
+					
+					firstName = fullName.substring(0, fullName.indexOf(" "));
+					middleName = "";
+					lastName = fullName.substring(fullName.lastIndexOf(" ")+1);
+				
+				} else {
+					
+					firstName = request.getHeader(PortletProps.get("saml2.header.mapping.firstname"));
+					middleName = request.getHeader(PortletProps.get("saml2.header.mapping.middlename"));
+					lastName = request.getHeader(PortletProps.get("saml2.header.mapping.lastname"));
+				
+				} 
+				
+				firstName = StringUtil.upperCaseFirstLetter(firstName);
+				lastName = StringUtil.upperCaseFirstLetter(lastName);
+				
+				user = getUserByOpenId(companyId, openId);
+				
+				if(!(user==null)) {
+					user.setCompanyId(companyId);
+					user.setCreateDate(DateUtil.newDate());
+					user.setEmailAddress(emailAddress);
+					user.setFirstName(firstName);
+					user.setMiddleName(middleName);
+					user.setLastName(lastName);
+					user.setScreenName(screenName);
+					
+					UserLocalServiceUtil.updateUser(user);
+					
+				} else {
+					user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
+				}
+				
+				_log.info("User " + user.getOpenId() + " logged in");
+					
+				credentials = new String[3];
+	
+				credentials[0] = String.valueOf(user.getUserId());
+				credentials[1] = user.getPassword();
+				credentials[2] = Boolean.TRUE.toString();
 			}
-			
-			_log.info("User " + user.getOpenId() + " logged in");
-				
-			credentials = new String[3];
-
-			credentials[0] = String.valueOf(user.getUserId());
-			credentials[1] = user.getPassword();
-			credentials[2] = Boolean.TRUE.toString();
-		}
-		catch (Exception e) {
-			_log.error(e, e);
+			catch (Exception e) {
+				_log.error(e, e);
+			}
 		}
 		
 		return credentials;
