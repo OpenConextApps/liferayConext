@@ -166,7 +166,14 @@ public class ConextAutoLogin implements AutoLogin {
 					middleName, lastName, prefixId, suffixId, male, birthdayMonth, birthdayDay, birthdayYear, jobTitle,
 					groupIds, organizationIds, roleIds, userGroupIds, sendEmail, serviceContext);
 			
-			user.setPasswordReset(false);
+			PasswordPolicy passwordPolicy = user.getPasswordPolicy();
+			
+			if(passwordPolicy.getChangeRequired() || passwordPolicy.getChangeable()) {
+				_log.debug("Setting password policy password change required to false for user "+ user.getOpenId());
+				passwordPolicy.setChangeRequired(false);
+				passwordPolicy.setChangeable(false);
+				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(passwordPolicy);
+			}
 		
 			user = UserLocalServiceUtil.updateUser(user);
 		} catch (PortalException e) {
