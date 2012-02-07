@@ -36,6 +36,7 @@ public class ConextAutoLogin implements AutoLogin {
 		try {
 			Group group = GroupLocalServiceUtil.getCompanyGroup(PortalUtil.getCompanyId(request));
 			group.getPublicLayoutSet().setThemeId("conext_WAR_conexttheme");
+			GroupLocalServiceUtil.updateGroup(group);
 		} catch (PortalException e1) {
 		} catch (SystemException e1) {
 		}
