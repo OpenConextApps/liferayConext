@@ -93,7 +93,7 @@ public class ConextAutoLogin implements AutoLogin {
 				user = addUser(companyId, screenName, emailAddress, openId, firstName, middleName, lastName);				
 			}
 			
-			_log.info("User " + user.getOpenId() + "logged in");
+			_log.info("User " + user.getOpenId() + " logged in");
 				
 			credentials = new String[3];
 
