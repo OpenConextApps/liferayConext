@@ -99,6 +99,7 @@ public class ConextAutoLogin implements AutoLogin {
 					user.setMiddleName(middleName);
 					user.setLastName(lastName);
 					user.setScreenName(screenName);
+					user.setPasswordReset(false);
 					
 					UserLocalServiceUtil.updateUser(user);
 					
@@ -174,6 +175,8 @@ public class ConextAutoLogin implements AutoLogin {
 				passwordPolicy.setChangeable(false);
 				PasswordPolicyLocalServiceUtil.updatePasswordPolicy(passwordPolicy);
 			}
+			
+			user.setPasswordReset(false);
 		
 			user = UserLocalServiceUtil.updateUser(user);
 		} catch (PortalException e) {
