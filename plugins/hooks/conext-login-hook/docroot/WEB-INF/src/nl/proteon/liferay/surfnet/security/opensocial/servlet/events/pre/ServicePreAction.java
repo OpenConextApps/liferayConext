@@ -44,73 +44,76 @@ public class ServicePreAction extends Action {
 			
 			long companyId = PortalUtil.getCompanyId(request);
 			User user = PortalUtil.getUser(request);
-			List<OpenSocialGroup> openSocialGroups = OpenSocialGroupLocalServiceUtil.getOpenSocialGroups(user.getUserId());
+			
+			if(user!=null) {
+				List<OpenSocialGroup> openSocialGroups = OpenSocialGroupLocalServiceUtil.getOpenSocialGroups(user.getUserId());
 		
-			for(OpenSocialGroup openSocialGroup : openSocialGroups) {
-				Group group = null;
-			
-				group = getGroup(companyId, openSocialGroup.getTitle());
-			
-				if(group==null) {
-					
-					_log.info("Group " + openSocialGroup.getId() + " is new");
-					
-					group = addGroup(
-							user.getUserId(),
-							companyId, 
-							openSocialGroup.getTitle(),
-							openSocialGroup.getDescription(),
-							"/" + openSocialGroup.getId().substring(30)
-							);
-					
-					_log.info("Group " + openSocialGroup.getId() + " added as " + group.getName());
-					
-					Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
-							-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
-							"", new ServiceContext());
+				for(OpenSocialGroup openSocialGroup : openSocialGroups) {
+					Group group = null;
 				
-					LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
-					layoutTypePortlet.setLayoutTemplateId(user.getUserId(), "1_column");
-					String documentLibraryPortletId = layoutTypePortlet.addPortletId(user.getUserId(), PortletKeys.DOCUMENT_LIBRARY, "column-1", -1, false);
-			    
-					long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
-					int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
-			    
-					PortletPreferences prefs = PortletPreferencesLocalServiceUtil.getPreferences(companyId, 
-							ownerId, ownerType, layout.getPlid(), documentLibraryPortletId);
-			    
-					prefs.setValue("portletSetupShowBorders", "false");
-			    
-					PortletPreferencesLocalServiceUtil.updatePreferences(ownerId, ownerType, layout
-							.getPlid(), documentLibraryPortletId, prefs);
-			    
-					layout = LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
-							layout.isPrivateLayout(), layout.getLayoutId(),
-							layout.getTypeSettings());
+					group = getGroup(companyId, openSocialGroup.getTitle());
 				
-				} else {
-					group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
+					if(group==null) {
+						
+						_log.info("Group " + openSocialGroup.getId() + " is new");
+						
+						group = addGroup(
+								user.getUserId(),
+								companyId, 
+								openSocialGroup.getTitle(),
+								openSocialGroup.getDescription(),
+								"/" + openSocialGroup.getId().substring(30)
+								);
+						
+						_log.info("Group " + openSocialGroup.getId() + " added as " + group.getName());
+						
+						Layout layout = LayoutLocalServiceUtil.addLayout(user.getUserId(), group.getGroupId(), true, 
+								-1, "our_page", "our_title", "", LayoutConstants.TYPE_PORTLET, false, 
+								"", new ServiceContext());
+					
+						LayoutTypePortlet layoutTypePortlet = (LayoutTypePortlet) layout.getLayoutType();
+						layoutTypePortlet.setLayoutTemplateId(user.getUserId(), "1_column");
+						String documentLibraryPortletId = layoutTypePortlet.addPortletId(user.getUserId(), PortletKeys.DOCUMENT_LIBRARY, "column-1", -1, false);
+				    
+						long ownerId = PortletKeys.PREFS_OWNER_ID_DEFAULT;
+						int ownerType = PortletKeys.PREFS_OWNER_TYPE_LAYOUT;
+				    
+						PortletPreferences prefs = PortletPreferencesLocalServiceUtil.getPreferences(companyId, 
+								ownerId, ownerType, layout.getPlid(), documentLibraryPortletId);
+				    
+						prefs.setValue("portletSetupShowBorders", "false");
+				    
+						PortletPreferencesLocalServiceUtil.updatePreferences(ownerId, ownerType, layout
+								.getPlid(), documentLibraryPortletId, prefs);
+				    
+						layout = LayoutLocalServiceUtil.updateLayout(layout.getGroupId(),
+								layout.isPrivateLayout(), layout.getLayoutId(),
+								layout.getTypeSettings());
+					
+					} else {
+						group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
+					}
+					Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
+				
+					UserGroupRoleLocalServiceUtil.addUserGroupRoles(
+							user.getUserId(), 
+							group.getGroupId(), 
+							new long[] { role.getRoleId() });
+					
 				}
-				Role role = RoleLocalServiceUtil.getRole(companyId, "Site Member");
-			
-				UserGroupRoleLocalServiceUtil.addUserGroupRoles(
-						user.getUserId(), 
-						group.getGroupId(), 
-						new long[] { role.getRoleId() });
 				
-			}
-			
-			Map<String, OpenSocialGroup> openSocialGroupsMap = new HashMap<String, OpenSocialGroup>();
-			for(OpenSocialGroup openSocialGroup : openSocialGroups){
-				openSocialGroupsMap.put(openSocialGroup.getTitle(), openSocialGroup);
-			}
-			
-			List<Group> groups = GroupLocalServiceUtil.getUserGroups(user.getUserId(), true);
-			
-			for(Group group : groups) {
-				if(openSocialGroupsMap.get(group.getName()) == null){
-					GroupLocalServiceUtil.unsetUserGroups(user.getUserId(), new long[] { group.getGroupId() });
-					_log.info("User " + user.getOpenId() + " removed from " + group.getName());
+				Map<String, OpenSocialGroup> openSocialGroupsMap = new HashMap<String, OpenSocialGroup>();
+				for(OpenSocialGroup openSocialGroup : openSocialGroups){
+					openSocialGroupsMap.put(openSocialGroup.getTitle(), openSocialGroup);
+				}
+				
+				List<Group> groups = GroupLocalServiceUtil.getUserGroups(user.getUserId(), true);
+				
+				for(Group group : groups) {
+					if(openSocialGroupsMap.get(group.getName()) == null){
+						GroupLocalServiceUtil.unsetUserGroups(user.getUserId(), new long[] { group.getGroupId() });
+						_log.info("User " + user.getOpenId() + " removed from " + group.getName());
+					}
 				}
 			}
 
