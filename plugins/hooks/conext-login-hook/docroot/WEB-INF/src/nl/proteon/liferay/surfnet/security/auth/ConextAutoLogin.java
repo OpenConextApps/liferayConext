@@ -137,7 +137,7 @@ public class ConextAutoLogin implements AutoLogin {
 		
 		User user = null;
 		
-		boolean autoPassword = false;
+		boolean autoPassword = true;
 		String password1 = "ASDF7890jkl";
 		String password2 = "ASDF7890jkl";
 		boolean autoScreenName = true;
