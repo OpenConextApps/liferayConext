@@ -106,7 +106,7 @@ public class ServicePreAction extends Action {
 								user.getUserId(), 
 								group.getGroupId(), 
 								new long[] { role.getRoleId() });
-						_log.debug("Set membership for "+ user.getOpenId() + " on " + group.getName());
+						_log.info("Set membership for "+ user.getOpenId() + " on " + group.getName());
 					} catch (PortalException e) {
 						_log.error(e,e);
 					} catch (SystemException e) {
