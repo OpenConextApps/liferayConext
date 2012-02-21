@@ -95,7 +95,7 @@ public class ServicePreAction extends Action {
 								layout.getTypeSettings());
 					
 					} else {
-						_log.info("Group " + openSocialGroup.getId() + " already exists");
+						_log.debug("Group " + openSocialGroup.getId() + " already exists");
 						group = updateGroup(companyId, group.getGroupId(), openSocialGroup.getDescription());
 					}
 					
@@ -106,7 +106,7 @@ public class ServicePreAction extends Action {
 								user.getUserId(), 
 								group.getGroupId(), 
 								new long[] { role.getRoleId() });
-						_log.info("Set membership for "+ user.getOpenId() + " on " + group.getName());
+						_log.debug("Set membership for "+ user.getOpenId() + " on " + group.getName());
 					} catch (PortalException e) {
 						_log.error(e,e);
 					} catch (SystemException e) {
