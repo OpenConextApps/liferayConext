@@ -1,18 +1,10 @@
 package nl.proteon.liferay.surfnet.security.opensocial.config;
 
-/**
- * Kepps all service related data. Remote URLs, commands, etc.
- * 
- */
 public class ServiceProfile{
 
    private String baseURL;
    private String consumerKey;
    private String consumerSecret;
-
-
-
-
 
    public ServiceProfile(String baseURL, String consumerKey, String consumerSecret){
       super();
@@ -21,58 +13,30 @@ public class ServiceProfile{
       this.consumerSecret = consumerSecret;
    }
 
-
-
-
-
    public String getBaseURL(){
       return baseURL;
    }
 
-
-
-
-
    public void setBaseURL(String baseURL){
       this.baseURL = baseURL;
    }
-
-
-
-
-
+   
    public String getConsumerKey(){
       return consumerKey;
    }
 
-
-
-
-
    public void setConsumerKey(String consumerKey){
       this.consumerKey = consumerKey;
    }
-
-
-
-
-
+   
    public String getConsumerSecret(){
       return consumerSecret;
    }
 
-
-
-
-
    public void setConsumerSecret(String consumerSecret){
       this.consumerSecret = consumerSecret;
    }
-
-
-
-
-
+   
    @Override
    public String toString(){
       return "ServiceProfile [baseURL=" + baseURL + ", consumerKey=" + consumerKey
