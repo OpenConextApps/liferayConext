@@ -85,14 +85,12 @@ public class ConextAutoLogin implements AutoLogin {
 						accessTokenValue.getString();
 					}
 				} catch (PortalException e) {
-					_log.error("123 get expendo goes bad: " + e.getMessage());
 					_log.error(e, e);
 				} catch (SystemException e) {
-					_log.error("get expendo goes bad: " + e.getMessage());
 					_log.error(e, e);
 				}
 			}
-			_log.error("******** access token: " + accessToken);
+
 			// redirect to authorization URL to get an oAuth code
 			if (accessToken == null || "".equals(accessToken)) {
 				try {
