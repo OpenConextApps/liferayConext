@@ -18,11 +18,11 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.expando.model.ExpandoColumn;
 import com.liferay.portlet.expando.model.ExpandoTable;
+import com.liferay.portlet.expando.model.ExpandoValue;
 import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
 import nl.proteon.liferay.surfnet.expando.ExpandoStartupAction;
-import nl.proteon.liferay.surfnet.security.opensocial.ConextGroupLocalServiceUtil;
 import nl.proteon.liferay.surfnet.security.opensocial.exceptions.ScribeException;
 import nl.proteon.liferay.surfnet.security.scribe.OAuth2ServiceUtil;
 import org.scribe.model.Token;
@@ -79,17 +79,20 @@ public class ConextAutoLogin implements AutoLogin {
 						throw new SystemException();
 					}
 					final long columnId = column.getColumnId();
-					accessToken = ExpandoValueLocalServiceUtil.getValue(
-							tableId, columnId, user.getPrimaryKey())
-							.getString();
-
+					ExpandoValue accessTokenValue = ExpandoValueLocalServiceUtil
+							.getValue(tableId, columnId, user.getPrimaryKey());
+					if (accessTokenValue != null) {
+						accessTokenValue.getString();
+					}
 				} catch (PortalException e) {
+					_log.error("123 get expendo goes bad: " + e.getMessage());
 					_log.error(e, e);
 				} catch (SystemException e) {
+					_log.error("get expendo goes bad: " + e.getMessage());
 					_log.error(e, e);
 				}
 			}
-
+			_log.error("******** access token: " + accessToken);
 			// redirect to authorization URL to get an oAuth code
 			if (accessToken == null || "".equals(accessToken)) {
 				try {
@@ -106,8 +109,8 @@ public class ConextAutoLogin implements AutoLogin {
 
 		if (user != null) {
 			// update Liferay groups based on groups from IDP
-			ConextGroupLocalServiceUtil.updateGroups(companyId, user,
-					accessToken);
+			// ConextGroupLocalServiceUtil.updateGroups(companyId, user,
+			// accessToken);
 		}
 
 		return credentials;
