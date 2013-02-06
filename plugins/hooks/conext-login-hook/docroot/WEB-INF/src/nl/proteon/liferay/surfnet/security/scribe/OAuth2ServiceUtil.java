@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 public class OAuth2ServiceUtil {
 	private final static String GROUP_URL = "social/rest/groups/@me";
 
-	// private final static String GROUP_URL = "social/rest/groups/";
-
 	/**
 	 * Redirect to the authorization URL.
 	 * 
@@ -66,40 +64,18 @@ public class OAuth2ServiceUtil {
 		final OAuthRequest request = new OAuthRequest(Verb.GET, url);
 		request.addHeader("Authorization", "Bearer " + accessToken);
 		final Response response = request.send();
-		// FIXME: this can be removed after testing groups on production
-		_log.debug("------------------");
-		_log.debug("--- RESPONSE -----");
-		_log.debug("--- URL: " + request.getCompleteUrl());
-		_log.debug("--- code: " + response.getCode());
-		_log.debug("--- body: " + response.getBody());
-		_log.debug("--- headers: " + response.getHeaders());
-		_log.debug("------------------");
+		if (response.getCode() != 200) {
+			_log.error("could not retrieve groups, see info below");
+			_log.error("URL: " + request.getCompleteUrl());
+			_log.error("headers: " + response.getHeaders());
+			_log.error("body: " + response.getBody());
+			return null;
+		}
 		final String jsonString = response.getBody();
-		// FIXME: fix this when we get groups from surfnet
-		// this can be removed after testing groups on production
-		// final String jsonString = "{"
-		// + "\"entry\": ["
-		// + "{"
-		// + "\"description\": \"Team voor de SURFconext management VO\","
-		// +
-		// "\"id\": \"urn:collab:group:test.surfteams.nl:nl:surfnet:diensten:managementvo\","
-		// + "\"title\": \"managementvo\","
-		// + "\"voot_membership_role\":\"admin\""
-		// + "},"
-		// + "{"
-		// + "\"description\": null,"
-		// +
-		// "\"id\": \"urn:collab:group:test.surfteams.nl:nl:surfnet:diensten:test_femke\","
-		// + "\"title\": \"Test Femke\","
-		// + "\"voot_membership_role\": \"member\"" + "}" + "],"
-		// + "\"filtered\": false," + "\"itemsPerPage\": 2,"
-		// + "\"sorted\": false," + "\"startIndex\": 0,"
-		// + "\"totalResults\": 2," + "\"updatedSince\": false" + "}";
 		final List<OpenSocialGroup> listResult = new ArrayList<OpenSocialGroup>();
 		final JSONParser parser = new JSONParser();
 		try {
 			final JSONObject json = (JSONObject) parser.parse(jsonString);
-			_log.info("JSON string: " + json);
 			// parse groups
 			final JSONArray entries = (JSONArray) json.get("entry");
 			for (Object rawEntry : entries) {

@@ -23,6 +23,7 @@ import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.portlet.expando.service.ExpandoValueLocalServiceUtil;
 import com.liferay.util.portlet.PortletProps;
 import nl.proteon.liferay.surfnet.expando.ExpandoStartupAction;
+import nl.proteon.liferay.surfnet.security.opensocial.ConextGroupLocalServiceUtil;
 import nl.proteon.liferay.surfnet.security.opensocial.exceptions.ScribeException;
 import nl.proteon.liferay.surfnet.security.scribe.OAuth2ServiceUtil;
 import org.scribe.model.Token;
@@ -82,7 +83,7 @@ public class ConextAutoLogin implements AutoLogin {
 					ExpandoValue accessTokenValue = ExpandoValueLocalServiceUtil
 							.getValue(tableId, columnId, user.getPrimaryKey());
 					if (accessTokenValue != null) {
-						accessTokenValue.getString();
+						accessToken = accessTokenValue.getString();
 					}
 				} catch (PortalException e) {
 					_log.error(e, e);
@@ -94,7 +95,7 @@ public class ConextAutoLogin implements AutoLogin {
 			// redirect to authorization URL to get an oAuth code
 			if (accessToken == null || "".equals(accessToken)) {
 				try {
-					_log.info("redirect to authorization URL");
+					_log.info("no access token found in DB, redirect to authorization URL");
 					OAuth2ServiceUtil.authorize(response);
 				} catch (IOException e) {
 					_log.error(e, e);
@@ -107,8 +108,8 @@ public class ConextAutoLogin implements AutoLogin {
 
 		if (user != null) {
 			// update Liferay groups based on groups from IDP
-			// ConextGroupLocalServiceUtil.updateGroups(companyId, user,
-			// accessToken);
+			ConextGroupLocalServiceUtil.updateGroups(companyId, user,
+					accessToken);
 		}
 
 		return credentials;
