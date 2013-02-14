@@ -57,6 +57,7 @@ public class ConextAutoLogin implements AutoLogin {
 					saveAccessToken(companyId, Long.parseLong(credentials[0]),
 							accessToken);
 				}
+				user = getUser(Long.parseLong(credentials[0]));
 			} catch (ScribeException e) {
 				_log.error(e, e);
 			}
@@ -65,7 +66,9 @@ public class ConextAutoLogin implements AutoLogin {
 			credentials = updateLiferayUser(request, companyId);
 			user = getUser(Long.parseLong(credentials[0]));
 			// get access token from database
-			if (user != null) {
+			if (user == null) {
+				_log.error("user not found, userid=" + credentials[0]);
+			} else {
 				ExpandoTable table = null;
 				try {
 					table = ExpandoStartupAction.expandoTable(companyId);
@@ -74,7 +77,7 @@ public class ConextAutoLogin implements AutoLogin {
 							.getColumn(tableId,
 									ExpandoStartupAction.ACCESS_TOKEN_NAME);
 					if (column == null) {
-						_log.error("Column for field "
+						_log.error("column for field "
 								+ ExpandoStartupAction.ACCESS_TOKEN_NAME
 								+ " not in table " + table);
 						throw new SystemException();
@@ -281,7 +284,12 @@ public class ConextAutoLogin implements AutoLogin {
 					user = addUser(companyId, screenName, emailAddress, openId,
 							firstName, middleName, lastName);
 				}
-				_log.info("user " + user.getOpenId() + " logged in");
+
+				if (user == null) {
+					_log.error("could not create user openId=" + openId);
+				} else {
+					_log.info("user " + user.getOpenId() + " logged in");
+				}
 
 				credentials = new String[3];
 				credentials[0] = String.valueOf(user.getUserId());

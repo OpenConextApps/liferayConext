@@ -69,13 +69,13 @@ public class OAuth2ServiceUtil {
 			_log.error("URL: " + request.getCompleteUrl());
 			_log.error("headers: " + response.getHeaders());
 			_log.error("body: " + response.getBody());
-			return null;
 		}
 		final String jsonString = response.getBody();
 		final List<OpenSocialGroup> listResult = new ArrayList<OpenSocialGroup>();
 		final JSONParser parser = new JSONParser();
 		try {
 			final JSONObject json = (JSONObject) parser.parse(jsonString);
+			_log.info("JSON string: " + json);
 			// parse groups
 			final JSONArray entries = (JSONArray) json.get("entry");
 			for (Object rawEntry : entries) {
