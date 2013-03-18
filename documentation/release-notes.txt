@@ -1,23 +1,5 @@
 ****************************************************************************************************************
-*** vX.Y.Z by [full name of developer who made the release] - [current DATE in YYYYMMDD format]
+*** v1.0.0 by S.Pi.J.Aggenbach - 2013/03/18
 ****************************************************************************************************************
-Requirements
-Description of all software (e.g. packages, other products, modules, libraries) that are not part of this project
-(and therefore will not be available after the checkout has been done) but that are required to make this 
-application work.
 
-Functional changes
-- [change 1]
-- [change 2]
-- ...
-- [change N]
-
-Test changes
-Description of how to test all changes with expected results. This text should by default make reference to 
-one or more scripts in the /scripts that one can run to automatically test the changes.
-
-Deployment instructions
-Description (typically a bullet list) of what needs to be done to migrate from the previous release to the new 
-release. This description typically includes things like 'stop the instance', 'do an svn switch to the new release 
-tag', 'update the database by running script XXX from the /scripts folder' etc.
-
+Refer to build.txt for how-to on how to build the plugin.
