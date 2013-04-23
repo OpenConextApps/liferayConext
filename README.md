@@ -11,15 +11,15 @@ Build:
 * cd plugins
 * ant all
 
-Following properties can be overridden by adding a portlet-ext.properties file to the classpath of the portal.
+The following properties can be overridden by adding a portlet-ext.properties file to the classpath of the portal.
 
-# SAML Properties
+## SAML Properties
 * saml2.header.mapping.id=persistent-id
 * saml2.header.mapping.screenname=persistent-id
 * saml2.header.mapping.email=emailaddress
 * saml2.header.mapping.fullname=displayname
 
-# VOOT (Oauth/REST) properties
+## VOOT (Oauth/REST) properties
 * opensocial.server.url=https://api.surfconext.nl/v1/
 * opensocial.consumer.key=
 * opensocial.consumer.secret=
