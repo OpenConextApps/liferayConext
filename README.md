@@ -6,11 +6,12 @@ A connection library for SAML2 AuthN and VOOT based groups for Liferay
 This component is a sttandard Liferay Plugin. 
 For requirements and Prerequisites, see: http://www.liferay.com/community/wiki/-/wiki/Main/Plugins+SDK
 
-Build:
+#Build
 * git clone https://github.com/OpenConextApps/liferayConext
 * cd plugins
 * ant all
 
+#Configuration
 The following properties can be overridden by adding a portlet-ext.properties file to the classpath of the portal.
 
 ## SAML Properties
@@ -26,7 +27,7 @@ The following properties can be overridden by adding a portlet-ext.properties fi
 * opensocial.redirect.url=
 
 
-Licence
+#Licence
 Copyright 2012 SURFnet bv, The Netherlands
 
 Licensed under the Apache License, Version 2.0 (the "License");
