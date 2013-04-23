@@ -2,7 +2,7 @@ How to build the surfconext plugins.
 
 See http://www.liferay.com/community/wiki/-/wiki/Main/Plugins+SDK
 
-# svn co https://subversion.proteon.nl/MAIN/projects/SNT1001_Surfnet_Liferay_61/trunk/plugins/
+# git clone https://github.com/OpenConextApps/liferayConext
 # cd plugins
 # ant all
 
